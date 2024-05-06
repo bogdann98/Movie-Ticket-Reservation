@@ -16,7 +16,8 @@ public class User {
 
 
     // Constructors
-    public User() {
+    public User()
+    {
         // Default constructor
     }
 

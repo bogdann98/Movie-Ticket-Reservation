@@ -14,6 +14,7 @@ import lombok.Data;
 public class Reservation {
 
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name="ID")
     private Long id;
     @Column(name="ReservationTime")

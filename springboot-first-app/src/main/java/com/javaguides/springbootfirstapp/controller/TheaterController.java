@@ -28,8 +28,26 @@ public class TheaterController {
     }
 
     @GetMapping("/theaters/{theater_id}")
-    public ResponseEntity<?> getMovieById(@PathVariable Long thearter_id) {
-        Theater theater = theaterService.getTheaterById(thearter_id);
+    public ResponseEntity<?> getMovieById(@PathVariable Long theater_id) {
+        Theater theater = theaterService.getTheaterById(theater_id);
+        return ResponseEntity.status(HttpStatus.OK).body(theater);
+    }
+
+    @DeleteMapping("/theaters/{theater_id}")
+    public ResponseEntity<Void> deleteTheaterById(@PathVariable Long theater_id) {
+        theaterService.deleteTheater(theater_id);
+        return ResponseEntity.noContent().build();
+    }
+
+    @PostMapping("/theaters")
+    public ResponseEntity<Theater> addTheater(@RequestBody Theater theater) {
+        Theater newTheater = theaterService.createTheater(theater);
+        return ResponseEntity.status(HttpStatus.CREATED).body(newTheater);
+    }
+
+    @PutMapping("/theaters/{theater_id}")
+    public ResponseEntity<Theater> updateTheater(@PathVariable Long theater_id, @RequestBody Theater updatedTheater) {
+        Theater theater = theaterService.updateTheater(theater_id, updatedTheater);
         return ResponseEntity.status(HttpStatus.OK).body(theater);
     }
 }

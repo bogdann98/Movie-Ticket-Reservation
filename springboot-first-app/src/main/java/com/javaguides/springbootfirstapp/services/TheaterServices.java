@@ -1,6 +1,8 @@
 package com.javaguides.springbootfirstapp.services;
 import com.javaguides.springbootfirstapp.model.Theater;
 import java.util.*;
+import org.springframework.stereotype.Service;
+@Service
 public interface TheaterServices {
 
     List<Theater> getAllTheaters();

@@ -40,11 +40,6 @@ public class ReservationServiceImpl implements ReservationServices {
     }
 
     @Override
-    public Reservation createReservation(Reservation reservation) {
-        return reservationRepository.save(reservation);
-    }
-
-    @Override
     public Reservation updateReservation(Long id, Reservation updatedReservation) {
         // Find the existing reservation by ID
         Reservation existingReservation = reservationRepository.findById(id)

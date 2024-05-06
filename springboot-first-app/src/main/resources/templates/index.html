@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Movie Ticket Reservation System</title>
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #007bff; /* Blue background color */
+            background-size: cover;
+            background-position: center;
+        }
+
+        h1 {
+            color: #333;
+        }
+
+        button {
+            padding: 10px 20px;
+            background-color: #007bff; /* Blue background color */
+            color: #fff;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #0056b3; /* Darker blue background color on hover */
+        }
+    </style>
+</head>
+<body>
+
+<h1>Welcome to the Movie Ticket Reservation System</h1>
+
+<!-- Navigation Buttons -->
+<div>
+    <button onclick="window.location.href='/movies'" class="btn btn-primary">View Movies</button>
+    <button onclick="window.location.href='/reservations'" class="btn btn-primary">View Tickets</button>
+    <button onclick="window.location.href='/theaters'" class="btn btn-primary">View Theaters</button>
+    <button onclick="window.location.href='/user'" class="btn btn-primary">View Users</button>
+</div>
+
+</body>
+</html>
