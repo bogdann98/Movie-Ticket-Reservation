@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>View Users</title>
+  <!-- Bootstrap CSS -->
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f8f9fa;
+      padding-top: 20px;
+    }
+
+    .container {
+      max-width: 800px;
+      margin: 0 auto;
+      background-color: rgba(255, 255, 255, 0.7); /* Add opacity to make text readable */
+      padding: 20px;
+      border-radius: 5px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    }
+
+    h2 {
+      margin-bottom: 20px;
+    }
+  </style>
+</head>
+<body>
+<div class="container">
+  <h2>View Users</h2>
+  <!-- Table to display users -->
+  <table class="table" id="usersTable">
+    <thead>
+    <tr>
+      <th>ID</th>
+      <th>Username</th>
+      <th>Email</th>
+    </tr>
+    </thead>
+    <tbody>
+    <!-- User rows will be dynamically inserted here -->
+    </tbody>
+  </table>
+</div>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script>
+  $(document).ready(function(){
+    // Function to fetch and display users
+    function fetchUsers() {
+      $.ajax({
+        type: 'GET',
+        url: '/user',
+        success: function(users){
+          // Clear existing user rows
+          $('#usersTable tbody').empty();
+
+          // Loop through the retrieved users and append rows to the table
+          $.each(users, function(index, user){
+            var row = '<tr>' +
+                    '<td>' + user.id + '</td>' +
+                    '<td>' + user.username + '</td>' +
+                    '<td>' + user.email + '</td>' +
+                    '</tr>';
+            $('#usersTable tbody').append(row);
+          });
+        },
+        error: function(error){
+          console.error(error);
+          alert('Error fetching users!');
+        }
+      });
+    }
+
+    // Call the fetchUsers function when the page is loaded
+    fetchUsers();
+  });
+</script>
+</body>
+</html>

@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>View Tickets</title>
+  <!-- Bootstrap CSS -->
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f8f9fa;
+      padding-top: 20px;
+    }
+
+    .container {
+      max-width: 800px;
+      margin: 0 auto;
+      background-color: #fff;
+      padding: 20px;
+      border-radius: 5px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    }
+
+    h2 {
+      margin-bottom: 20px;
+    }
+  </style>
+</head>
+<body>
+<div class="container">
+  <h2>View Tickets</h2>
+  <!-- Table to display tickets -->
+  <table class="table" id="ticketsTable">
+    <thead>
+    <tr>
+      <th>ID</th>
+      <th>Reservation Time</th>
+      <th>User</th>
+      <th>Movie</th>
+    </tr>
+    </thead>
+    <tbody>
+    <!-- Ticket rows will be dynamically inserted here -->
+    </tbody>
+  </table>
+</div>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script>
+  $(document).ready(function(){
+    // Function to fetch and display tickets
+    function fetchTickets() {
+      $.ajax({
+        type: 'GET',
+        url: '/reservations',
+        success: function(tickets){
+          // Clear existing ticket rows
+          $('#ticketsTable tbody').empty();
+
+          // Loop through the retrieved tickets and append rows to the table
+          $.each(tickets, function(index, ticket){
+            var row = '<tr>' +
+                    '<td>' + ticket.id + '</td>' +
+                    '<td>' + ticket.reservationTime + '</td>' +
+                    '<td>' + ticket.user.username + '</td>' +
+                    '<td>' + ticket.movie.title + '</td>' +
+                    '</tr>';
+            $('#ticketsTable tbody').append(row);
+          });
+        },
+        error: function(error){
+          console.error(error);
+          alert('Error fetching tickets!');
+        }
+      });
+    }
+
+    // Call the fetchTickets function when the page is loaded
+    fetchTickets();
+  });
+</script>
+</body>
+</html>

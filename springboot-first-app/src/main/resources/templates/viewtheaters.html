@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>View Theaters</title>
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f8f9fa;
+            padding-top: 20px;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        h2 {
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <h2>View Theaters</h2>
+    <!-- Table to display theaters -->
+    <table class="table" id="theatersTable">
+        <thead>
+        <tr>
+            <th>ID</th>
+            <th>Name</th>
+            <th>Location</th>
+        </tr>
+        </thead>
+        <tbody>
+        <!-- Theaters will be dynamically inserted here -->
+        </tbody>
+    </table>
+</div>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script>
+    $(document).ready(function(){
+        // Fetch theaters data from server
+        $.ajax({
+            type: 'GET',
+            url: '/theaters',
+            success: function(theaters){
+                // Loop through theaters and append to table
+                theaters.forEach(function(theater){
+                    var newRow = '<tr>' +
+                        '<td>' + theater.id + '</td>' +
+                        '<td>' + theater.name + '</td>' +
+                        '<td>' + theater.location + '</td>' +
+                        '</tr>';
+                    $('#theatersTable tbody').append(newRow);
+                });
+            },
+            error: function(error){
+                console.error(error);
+                alert('Error fetching theaters!');
+            }
+        });
+    });
+</script>
+</body>
+</html>
