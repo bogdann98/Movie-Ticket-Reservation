@@ -24,23 +24,3 @@ HTML,
 CSS,
 BootStrap,
 JavaScript
-
-## API Endpoints
-* GET /movies: Get a list of movies.
-* GET /movies/{id}: Get detailed information about a specific movie.
-* POST /movies: Add a new movie.
-* DELETE /movie/{movieId}: Delete a movie.
-* PUT /movie/{movieId}: Update movie information.
-* GET /theaters: Get a list of theaters.
-* GET /theaters/{id}: Get detailed information about a specific theater.
-* POST /theaters: Add a new theater.
-* DELETE /theaters/{movieId}: Delete a theater.
-* PUT /theaters/{movieId}: Update theater information.
-* GET /user: Get a list of users.
-* GET /user/{id}: Get detailed information about a specific user.
-* POST /user: Add a new user.
-* DELETE /user/{movieId}: Delete an user.
-* PUT /user/{movieId}: Update user information.
-* GET /reservations: Get a list of reservations.
-* GET /reservations/{id}: Get detailed information about a specific reservation.
-* POST /reservations: Add a new reservation.
