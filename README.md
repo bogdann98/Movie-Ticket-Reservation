@@ -1,5 +1,5 @@
 # Movie-Ticket-Reservation
-* This is a project that consist of a fullstack web application for movie ticket reservation using 4 classes: Movie, User, Theater and Reservation.
+* This is a project that consists of a fullstack web application for movie ticket reservation using 4 classes: Movie, User, Theater and Reservation.
 * The backend side was created using Java with Spring Boot framework and the data will be stored in a MySQL Database. 
 * Additionally the implemented Api's have been tested using PostMan for checking all CRUD operation (POST, GET, PUT, DELETE).
 * The frontend side was created using HTML, CSS with BootStrap and Javascript with Jquery and Ajax.
