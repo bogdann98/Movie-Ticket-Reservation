@@ -6,6 +6,31 @@
   <title>View Movies</title>
   <!-- Bootstrap CSS -->
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+  <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <a class="navbar-brand" href="#"></a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarNav">
+      <ul class="navbar-nav">
+        <li class="nav-item active">
+          <a class="nav-link" href="/">Home <span class="sr-only">(current)</span></a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="/viewmovies">View Movies</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="/viewusers">View Users</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="/viewtickets">View Reservations</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="/viewtheaters">View Theaters</a>
+        </li>
+      </ul>
+    </div>
+  </nav>
   <style>
     body {
       font-family: Arial, sans-serif;
@@ -14,7 +39,7 @@
     }
 
     .container {
-      max-width: 800px;
+      max-width: 1200px;
       margin: 0 auto;
       background-color: #fff;
       padding: 20px;
@@ -38,10 +63,11 @@
       <th>Title</th>
       <th>Description</th>
       <th>Release Date</th>
+      <th>Actions</th>
     </tr>
     </thead>
     <tbody>
-    <!-- Movie rows will be dynamically inserted here -->
+    <!-- Movies will be dynamically inserted here -->
     </tbody>
   </table>
 </div>
@@ -49,24 +75,24 @@
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 <script>
   $(document).ready(function(){
-    // Function to fetch and display movies
     function fetchMovies() {
       $.ajax({
         type: 'GET',
         url: '/movies',
         success: function(movies){
-          // Clear existing movie rows
           $('#moviesTable tbody').empty();
-
-          // Loop through the retrieved movies and append rows to the table
-          $.each(movies, function(index, movie){
-            var row = '<tr>' +
+          movies.forEach(function(movie){
+            var newRow = '<tr id="movie-' + movie.id + '">' +
                     '<td>' + movie.id + '</td>' +
                     '<td>' + movie.title + '</td>' +
                     '<td>' + movie.description + '</td>' +
                     '<td>' + movie.releaseDate + '</td>' +
+                    '<td>' +
+                    '<button class="btn btn-primary btn-sm updateBtn mr-2" data-id="' + movie.id + '">Update</button>' +
+                    '<button class="btn btn-danger btn-sm deleteBtn" data-id="' + movie.id + '">Delete</button>' +
+                    '</td>' +
                     '</tr>';
-            $('#moviesTable tbody').append(row);
+            $('#moviesTable tbody').append(newRow);
           });
         },
         error: function(error){
@@ -78,6 +104,97 @@
 
     // Call the fetchMovies function when the page is loaded
     fetchMovies();
+
+    // Update button click handler
+    $(document).on('click', '.updateBtn', function(){
+      var movieId = $(this).data('id');
+
+      // Fetch the current data of the movie
+      $.ajax({
+        type: 'GET',
+        url: '/movies/' + movieId,
+        success: function(movie){
+          // Prompt dialog to ask the user which field they want to modify
+          var fieldToModify = prompt('Which field would you like to modify? (title, description, releaseDate)');
+
+          // If the user cancels or provides an invalid attribute, do nothing
+          if (!fieldToModify || !['title','description','releaseDate'].includes(fieldToModify.toLowerCase())) {
+            return;
+          }
+
+          // Prompt dialog to ask the user for the new value of the selected field
+          var newValue;
+          if (fieldToModify.toLowerCase() === 'releasedate') {
+            newValue = prompt('Enter the new value for ' + fieldToModify + ' (YYYY-MM-DD):');
+          } else {
+            newValue = prompt('Enter the new value for ' + fieldToModify + ':');
+          }
+
+          // If user cancels the prompt or leaves it blank, do nothing
+          if (!newValue) {
+            return;
+          }
+
+          // Prepare the data to be sent in the AJAX request
+          var requestData = {
+            title: movie.title,
+            description: movie.description,
+            releaseDate: movie.releaseDate
+          };
+          requestData[fieldToModify] = newValue;
+
+          // Send PUT request to update the movie
+          $.ajax({
+            type: 'PUT',
+            url: '/movies/' + movieId,
+            data: JSON.stringify(requestData),
+            contentType: 'application/json',
+            success: function(response){
+              // Handle success response
+              console.log(response);
+              alert('Movie updated successfully!');
+
+              // Refresh the movie table
+              fetchMovies();
+            },
+            error: function(error){
+              console.error(error);
+              alert('Error updating movie!');
+            }
+          });
+        },
+        error: function(error){
+          console.error(error);
+          alert('Error fetching movie details!');
+        }
+      });
+    });
+
+    // Delete button click handler
+    $(document).on('click', '.deleteBtn', function(){
+      var movieId = $(this).data('id');
+
+      // Confirm with the user before deleting
+      if(confirm('Are you sure you want to delete this movie?')){
+        // Send DELETE request to delete the movie
+        $.ajax({
+          type: 'DELETE',
+          url: '/movies/' + movieId,
+          success: function(response){
+            // Handle success response
+            console.log(response);
+            alert('Movie deleted successfully!');
+
+            // Remove the row from the table
+            $('#movie-' + movieId).remove();
+          },
+          error: function(error){
+            console.error(error);
+            alert('Error deleting movie!');
+          }
+        });
+      }
+    });
   });
 </script>
 </body>

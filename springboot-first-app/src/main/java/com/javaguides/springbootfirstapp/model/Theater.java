@@ -1,6 +1,8 @@
 package com.javaguides.springbootfirstapp.model;
 import jakarta.persistence.*;
 import lombok.Data;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
 
 @Entity
 @Data
@@ -8,6 +10,7 @@ import lombok.Data;
 public class Theater {
 
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name="ID")
     private Long id;
     @Column(name="NAME")

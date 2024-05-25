@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Add Ticket</title>
+  <!-- Bootstrap CSS -->
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+  <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+  <a class="navbar-brand" href="#"></a>
+  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+  <div class="collapse navbar-collapse" id="navbarNav">
+    <ul class="navbar-nav">
+      <li class="nav-item active">
+        <a class="nav-link" href="/">Home <span class="sr-only">(current)</span></a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="/addusers">Add Users</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="/addmovies">Add Movies</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="/addtheaters">Add Theaters</a>
+      </li>
+    </ul>
+  </div>
+  </nav>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f8f9fa;
+      padding-top: 20px;
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      background-color: #fff;
+      padding: 20px;
+      border-radius: 5px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    }
+
+    h2 {
+      margin-bottom: 20px;
+    }
+
+    label {
+      font-weight: bold;
+    }
+
+    textarea {
+      min-height: 100px;
+    }
+  </style>
+</head>
+<body>
+<div class="container">
+  <h2>Add Ticket</h2>
+  <form id="addTicketForm">
+    <div class="form-group">
+      <label for="reservationTime">Reservation Time:</label>
+      <input type="datetime-local" class="form-control" id="reservationTime" name="reservationTime">
+    </div>
+    <div class="form-group">
+      <label for="userId">User ID:</label>
+      <input type="text" class="form-control" id="userId" name="userId">
+    </div>
+    <div class="form-group">
+      <label for="movieId">Movie ID:</label>
+      <input type="text" class="form-control" id="movieId" name="movieId">
+    </div>
+    <div class="form-group">
+      <label for="TheaterId">Theater ID:</label>
+      <input type="text" class="form-control" id="TheaterId" name="theaterId">
+    </div>
+    <button type="submit" class="btn btn-primary">Submit</button>
+  </form>
+
+  <!-- Table to display added tickets -->
+  <h2>Added Tickets</h2>
+  <table class="table" id="addedTicketsTable">
+    <thead>
+    <tr>
+      <th>ID</th>
+      <th>Reservation Time</th>
+      <th>User</th>
+      <th>Movie</th>
+      <th>Theater</th>
+      <th>Location</th>
+    </tr>
+    </thead>
+    <tbody>
+    <!-- Added tickets will be dynamically inserted here -->
+    </tbody>
+  </table>
+</div>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script>
+  $(document).ready(function(){
+    // Function to fetch and display tickets
+    function fetchTickets() {
+      $.ajax({
+        type: 'GET',
+        url: '/reservations',
+        success: function(tickets){
+          // Clear existing ticket rows
+          $('#addedTicketsTable tbody').empty();
+
+          // Loop through the retrieved tickets and append rows to the table
+          $.each(tickets, function(index, ticket){
+            var row = '<tr>' +
+                    '<td>' + ticket.id + '</td>' +
+                    '<td>' + ticket.reservationTime + '</td>' +
+                    '<td>' + ticket.user.username + '</td>' +
+                    '<td>' + ticket.movie.title + '</td>' +
+                    '<td>' + ticket.theater.name + '</td>' +
+                    '<td>' + ticket.theater.location + '</td>' +
+                    '</tr>';
+            $('#addedTicketsTable tbody').append(row);
+          });
+        },
+        error: function(error){
+          console.error(error);
+          alert('Error fetching tickets!');
+        }
+      });
+    }
+
+    // Call the fetchTickets function when the page is loaded
+    fetchTickets();
+
+    // Submit form handler
+    $('#addTicketForm').submit(function(e){
+      e.preventDefault(); // Prevent form submission
+
+      // Create a JavaScript object to represent the ticket data
+      var ticketData = {
+        reservationTime: $('#reservationTime').val(),
+        user: {
+          id: $('#userId').val()
+        },
+        movie: {
+          id: $('#movieId').val()
+        },
+        theater: {
+          id: $('#TheaterId').val()
+        }
+      };
+
+      // Send POST request to server
+      $.ajax({
+        type: 'POST',
+        url: '/reservations',
+        data: JSON.stringify(ticketData), // Convert ticketData to JSON string
+        contentType: 'application/json', // Set content type to JSON
+        success: function(response){
+          // Handle success response
+          console.log(response);
+          alert('Ticket added successfully!');
+
+          // Fetch and display updated list of tickets
+          fetchTickets();
+
+          // Reset form fields
+          $('#addTicketForm')[0].reset();
+        },
+        error: function(error){
+          console.error(error);
+          alert('Error adding ticket!');
+        }
+      });
+    });
+  });
+</script>
+</body>
+</html>

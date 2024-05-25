@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Add User</title>
+  <!-- Bootstrap CSS -->
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+  <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <a class="navbar-brand" href="#"></a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarNav">
+      <ul class="navbar-nav">
+        <li class="nav-item active">
+          <a class="nav-link" href="/">Home <span class="sr-only">(current)</span></a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="/addtickets">Add Reservation</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="/addmovies">Add Movies</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="/addtheaters">Add Theaters</a>
+        </li>
+      </ul>
+    </div>
+  </nav>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f8f9fa;
+      padding-top: 20px;
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      background-color: #fff;
+      padding: 20px;
+      border-radius: 5px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    }
+
+    h2 {
+      margin-bottom: 20px;
+    }
+
+    label {
+      font-weight: bold;
+    }
+  </style>
+</head>
+<body>
+<div class="container">
+  <h2>Add User</h2>
+  <form id="addUserForm">
+    <div class="form-group">
+      <label for="username">Username:</label>
+      <input type="text" class="form-control" id="username" name="username">
+    </div>
+    <div class="form-group">
+      <label for="email">Email:</label>
+      <input type="email" class="form-control" id="email" name="email">
+    </div>
+    <div class="form-group">
+      <label for="password">Password:</label>
+      <input type="password" class="form-control" id="password" name="password">
+    </div>
+    <button type="submit" class="btn btn-primary">Submit</button>
+  </form>
+
+  <!-- Table to display added users -->
+  <h2>Added Users</h2>
+  <table class="table" id="addedUsersTable">
+    <thead>
+    <tr>
+      <th>ID</th>
+      <th>Username</th>
+      <th>Email</th>
+    </tr>
+    </thead>
+    <tbody>
+    <!-- Added users will be dynamically inserted here -->
+    </tbody>
+  </table>
+</div>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script>
+  $(document).ready(function(){
+    // Function to fetch and display users
+    function fetchUsers() {
+      $.ajax({
+        type: 'GET',
+        url: '/user',
+        success: function(users){
+          // Clear existing user rows
+          $('#addedUsersTable tbody').empty();
+
+          // Loop through the retrieved users and append rows to the table
+          $.each(users, function(index, user){
+            var row = '<tr>' +
+                    '<td>' + user.id + '</td>' +
+                    '<td>' + user.username + '</td>' +
+                    '<td>' + user.email + '</td>' +
+                    '</tr>';
+            $('#addedUsersTable tbody').append(row);
+          });
+        },
+        error: function(error){
+          console.error(error);
+          alert('Error fetching users!');
+        }
+      });
+    }
+
+    // Call the fetchUsers function when the page is loaded
+    fetchUsers();
+
+    // Submit form handler
+    $('#addUserForm').submit(function(e){
+      e.preventDefault(); // Prevent form submission
+
+      // Create a JavaScript object to represent the user data
+      var userData = {
+        username: $('#username').val(),
+        email: $('#email').val(),
+        password: $('#password').val()
+      };
+
+      // Send POST request to server
+      $.ajax({
+        type: 'POST',
+        url: '/user',
+        data: JSON.stringify(userData), // Convert userData to JSON string
+        contentType: 'application/json', // Set content type to JSON
+        success: function(response){
+          // Handle success response
+          console.log(response);
+          alert('User added successfully!');
+
+          // Fetch and display updated list of users
+          fetchUsers();
+
+          // Reset form fields
+          $('#addUserForm')[0].reset();
+        },
+        error: function(error){
+          console.error(error);
+          alert('Error adding user!');
+        }
+      });
+    });
+  });
+</script>
+</body>
+</html>

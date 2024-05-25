@@ -3,6 +3,8 @@ package com.javaguides.springbootfirstapp.model;
 import jakarta.persistence.*;
 
 import java.time.LocalDateTime;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
 import com.javaguides.springbootfirstapp.model.User;
 import com.javaguides.springbootfirstapp.model.Movie;
 import com.javaguides.springbootfirstapp.model.Theater;
@@ -36,10 +38,11 @@ public class Reservation {
         // Default constructor
     }
 
-    public Reservation(LocalDateTime reservationTime, User user, Movie movie) {
+    public Reservation(LocalDateTime reservationTime, User user, Movie movie, Theater theater) {
         this.reservationTime = reservationTime;
         this.user = user;
         this.movie = movie;
+        this.theater = theater;
     }
 
     // Getters and Setters
@@ -85,5 +88,7 @@ public class Reservation {
     public void setTheater(Theater theater) {
         this.theater = theater;
     }
+
+
 
 }

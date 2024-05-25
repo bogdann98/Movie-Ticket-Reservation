@@ -1,10 +1,13 @@
 package com.javaguides.springbootfirstapp.model;
 import jakarta.persistence.*;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
 
 @Entity
 public class User {
 
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name="ID")
     private Long id;
     @Column(name="USERNAME")

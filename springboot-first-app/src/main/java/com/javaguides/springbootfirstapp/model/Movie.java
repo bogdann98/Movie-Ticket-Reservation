@@ -2,6 +2,8 @@ package com.javaguides.springbootfirstapp.model;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
 import jakarta.persistence.Table;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -14,6 +16,7 @@ import java.time.LocalDate;
 public class Movie {
 
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY) // Auto-generate IDs
     @Column(name="ID")
     private Long id;
     @Column(name="TITLE")

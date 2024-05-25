@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Add Theater</title>
+  <!-- Bootstrap CSS -->
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+  <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <a class="navbar-brand" href="#"></a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarNav">
+      <ul class="navbar-nav">
+        <li class="nav-item active">
+          <a class="nav-link" href="/">Home <span class="sr-only">(current)</span></a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="/addtickets">Add Reservation</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="/addusers">Add Users</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="/addmovies">Add Movies</a>
+        </li>
+      </ul>
+    </div>
+  </nav>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f8f9fa;
+      padding-top: 20px;
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      background-color: #fff;
+      padding: 20px;
+      border-radius: 5px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    }
+
+    h2 {
+      margin-bottom: 20px;
+    }
+
+    label {
+      font-weight: bold;
+    }
+
+    textarea {
+      min-height: 100px;
+    }
+  </style>
+</head>
+<body>
+<div class="container">
+  <h2>Add Theater</h2>
+  <form id="addTheaterForm">
+    <div class="form-group">
+      <label for="name">Name:</label>
+      <input type="text" class="form-control" id="name" name="name">
+    </div>
+    <div class="form-group">
+      <label for="location">Location:</label>
+      <input type="text" class="form-control" id="location" name="location">
+    </div>
+    <button type="submit" class="btn btn-primary">Submit</button>
+  </form>
+
+  <!-- Table to display added theaters -->
+  <h2>Added Theaters</h2>
+  <table class="table" id="addedTheatersTable">
+    <thead>
+    <tr>
+      <th>ID</th>
+      <th>Name</th>
+      <th>Location</th>
+    </tr>
+    </thead>
+    <tbody>
+    <!-- Added theaters will be dynamically inserted here -->
+    </tbody>
+  </table>
+</div>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script>
+  $(document).ready(function(){
+    // Function to fetch and display theaters
+    function fetchTheaters() {
+      $.ajax({
+        type: 'GET',
+        url: '/theaters',
+        success: function(theaters){
+          // Clear existing theater rows
+          $('#addedTheatersTable tbody').empty();
+
+          // Loop through the retrieved theaters and append rows to the table
+          $.each(theaters, function(index, theater){
+            var row = '<tr>' +
+                    '<td>' + theater.id + '</td>' +
+                    '<td>' + theater.name + '</td>' +
+                    '<td>' + theater.location + '</td>' +
+                    '</tr>';
+            $('#addedTheatersTable tbody').append(row);
+          });
+        },
+        error: function(error){
+          console.error(error);
+          alert('Error fetching theaters!');
+        }
+      });
+    }
+
+    // Call the fetchTheaters function when the page is loaded
+    fetchTheaters();
+
+    // Submit form handler
+    $('#addTheaterForm').submit(function(e){
+      e.preventDefault(); // Prevent form submission
+
+      // Create a JavaScript object to represent the theater data
+      var theaterData = {
+        name: $('#name').val(),
+        location: $('#location').val()
+      };
+
+      // Send POST request to server
+      $.ajax({
+        type: 'POST',
+        url: '/theaters',
+        data: JSON.stringify(theaterData), // Convert theaterData to JSON string
+        contentType: 'application/json', // Set content type to JSON
+        success: function(response){
+          // Handle success response
+          console.log(response);
+          alert('Theater added successfully!');
+
+          // Fetch and display updated list of theaters
+          fetchTheaters();
+
+          // Reset form fields
+          $('#addTheaterForm')[0].reset();
+        },
+        error: function(error){
+          console.error(error);
+          alert('Error adding theater!');
+        }
+      });
+    });
+  });
+</script>
+</body>
+</html>

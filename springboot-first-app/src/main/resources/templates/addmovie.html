@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Add Movie</title>
+  <!-- Bootstrap CSS -->
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+  <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <a class="navbar-brand" href="#"></a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarNav">
+      <ul class="navbar-nav">
+        <li class="nav-item active">
+          <a class="nav-link" href="/">Home <span class="sr-only">(current)</span></a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="/addtickets">Add Reservation</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="/addusers">Add Users</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="/addtheaters">Add Theaters</a>
+        </li>
+      </ul>
+    </div>
+  </nav>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f8f9fa;
+      padding-top: 20px;
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      background-color: #fff;
+      padding: 20px;
+      border-radius: 5px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    }
+
+    h2 {
+      margin-bottom: 20px;
+    }
+
+    label {
+      font-weight: bold;
+    }
+
+    textarea {
+      min-height: 100px;
+    }
+  </style>
+</head>
+<body>
+<div class="container">
+  <h2>Add Movie</h2>
+  <form id="addMovieForm">
+    <!-- No need to include ID field since it's auto-incremented -->
+    <div class="form-group">
+      <label for="title">Title:</label>
+      <input type="text" class="form-control" id="title" name="title">
+    </div>
+    <div class="form-group">
+      <label for="description">Description:</label>
+      <textarea class="form-control" id="description" name="description"></textarea>
+    </div>
+    <div class="form-group">
+      <label for="releaseDate">Release Date:</label>
+      <input type="date" class="form-control" id="releaseDate" name="releaseDate">
+    </div>
+    <button type="submit" class="btn btn-primary">Submit</button>
+  </form>
+
+  <!-- Table to display added movies -->
+  <h2>Added Movies</h2>
+  <table class="table" id="addedMoviesTable">
+    <thead>
+    <tr>
+      <th>ID</th>
+      <th>Title</th>
+      <th>Description</th>
+      <th>Release Date</th>
+    </tr>
+    </thead>
+    <tbody>
+    <!-- Added movies will be dynamically inserted here -->
+    </tbody>
+  </table>
+</div>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script>
+  $(document).ready(function(){
+    // Function to fetch and display movies
+    function fetchMovies() {
+      $.ajax({
+        type: 'GET',
+        url: '/movies',
+        success: function(movies){
+          // Clear existing movie rows
+          $('#addedMoviesTable tbody').empty();
+
+          // Loop through the retrieved movies and append rows to the table
+          $.each(movies, function(index, movie){
+            var row = '<tr>' +
+                    '<td>' + movie.id + '</td>' +
+                    '<td>' + movie.title + '</td>' +
+                    '<td>' + movie.description + '</td>' +
+                    '<td>' + movie.releaseDate + '</td>' +
+                    '</tr>';
+            $('#addedMoviesTable tbody').append(row);
+          });
+        },
+        error: function(error){
+          console.error(error);
+          alert('Error fetching movies!');
+        }
+      });
+    }
+
+    // Call the fetchMovies function when the page is loaded
+    fetchMovies();
+
+    // Submit form handler
+    $('#addMovieForm').submit(function(e){
+      e.preventDefault(); // Prevent form submission
+
+      // Create a JavaScript object to represent the movie data
+      var movieData = {
+        title: $('#title').val(),
+        description: $('#description').val(),
+        releaseDate: $('#releaseDate').val()
+      };
+
+      // Send POST request to server
+      $.ajax({
+        type: 'POST',
+        url: '/addmovies',
+        data: JSON.stringify(movieData), // Convert movieData to JSON string
+        contentType: 'application/json', // Set content type to JSON
+        success: function(response){
+          // Handle success response
+          console.log(response);
+          alert('Movie added successfully!');
+
+          // Fetch and display updated list of movies
+          fetchMovies();
+
+          // Reset form fields
+          $('#addMovieForm')[0].reset();
+        },
+        error: function(error){
+          console.error(error);
+          alert('Error adding movie!');
+        }
+      });
+    });
+  });
+</script>
+</body>
+</html>

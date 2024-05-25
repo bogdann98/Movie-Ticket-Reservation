@@ -23,9 +23,7 @@ public class ReservationServiceImpl implements ReservationServices {
         this.theaterRepository = theaterRepository;
     }
 
-    public Reservation createReservation(Reservation reservation, Long theaterId) {
-        Theater theater = theaterRepository.findById(theaterId).orElseThrow(() -> new TheaterNotFoundException(theaterId));
-        reservation.setTheater(theater);
+    public Reservation createReservation(Reservation reservation) {
         return reservationRepository.save(reservation);
     }
 
@@ -52,8 +50,6 @@ public class ReservationServiceImpl implements ReservationServices {
         // Save and return the updated reservation
         return reservationRepository.save(existingReservation);
     }
-
-
 
     @Override
     public void deleteReservation(Long id) {

@@ -12,14 +12,37 @@ public class HomeController {
         return "index"; // This will return "home.html" from the templates directory (if using Thymeleaf)
     }
 
-    @GetMapping("/viewtickets")
-    public String viewTicketsPage() {
-        return "viewtickets"; // This will return "viewtickets.html" from the templates directory
+    @GetMapping("/addmovies")
+    public String addMoviesPage() {
+        // Return the name of the HTML file for adding movies
+        return "addmovie"; // This will return "addmovie.html" from the templates directory
+    }
+
+    @GetMapping("/addtheaters")
+    public String addTheatersPage() {
+        // Return the name of the HTML file for adding movies
+        return "addtheaters"; // This will return "addtheaters.html" from the templates directory
+    }
+
+    @GetMapping("/addusers")
+    public String addUsersPage() {
+        // Return the name of the HTML file for adding movies
+        return "addusers"; // This will return "addusers.html" from the templates directory
+    }
+    @GetMapping("/addtickets")
+    public String addTicketsPage() {
+        // Return the name of the HTML file for adding movies
+        return "addtickets"; // This will return "addtickets.html" from the templates directory
     }
 
     @GetMapping("/viewmovies")
     public String viewMoviesPage() {
             return "viewmovies"; // This will return "viewmovies.html" from the templates directory
+        }
+
+        @GetMapping("/viewtickets")
+        public String viewTicketsPage() {
+            return "viewtickets"; // This will return "viewtickets.html" from the templates directory
         }
 
     @GetMapping("/viewusers")

@@ -1,6 +1,7 @@
 package com.javaguides.springbootfirstapp.controller;
 
 import com.javaguides.springbootfirstapp.model.Reservation;
+import com.javaguides.springbootfirstapp.model.Theater;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -34,9 +35,10 @@ public class ReservationController {
         return ResponseEntity.status(HttpStatus.OK).body(createdreservation);
     }
 
-    @PostMapping
-    public ResponseEntity<Reservation> createReservation(@RequestBody Reservation reservation, @RequestParam Long theaterId) {
-        Reservation createdReservation = reservationService.createReservation(reservation, theaterId);
+    @PostMapping("/reservations")
+    public ResponseEntity<Reservation> createReservation(@RequestBody Reservation reservation) {
+        Reservation createdReservation = reservationService.createReservation(reservation);
         return new ResponseEntity<>(createdReservation, HttpStatus.CREATED);
     }
+
 }
